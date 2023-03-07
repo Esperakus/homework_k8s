@@ -1,0 +1,7 @@
+[k8s-nodes]
+k8s0
+k8s1
+k8s2
+
+[ansible-host]
+localhost

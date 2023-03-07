@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  roles:
+    - { role: general-el8, become: true }
+    
+- hosts: k8s-nodes
+  roles:
+    - { role: k8s-main, become: true }

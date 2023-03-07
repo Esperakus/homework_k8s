@@ -1,0 +1,69 @@
+---
+# tasks file for general
+
+  - name: set timezone msk
+    timezone:
+      name: Europe/Moscow
+
+  - name: Import EPEL GPG key.
+    rpm_key:
+      key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"      
+      state: present
+
+  - name: Install EPEL repo.
+    dnf:
+      name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+      state: present
+    
+  - name: Upgrade all
+    dnf:
+      name: '*'
+      state: latest
+      update_cache: true
+      nobest: true
+
+  - name: Install packages
+    dnf:
+      name:
+      - openssl-devel
+      - bzip2-devel
+      - libffi-devel
+      - nano
+      - git
+      - bash-completion
+      - logwatch
+      - lsscsi
+      - mc
+      - mlocate
+      - mtr
+      - nfs-utils
+      - parted
+      - pciutils
+      - pinfo
+      - policycoreutils-python-utils
+      - rsync
+      - sysstat
+      - telnet
+      - unzip
+      - wget
+      - net-tools
+      - yum-utils
+      - htop
+      - device-mapper-persistent-data
+      - lvm2
+      - lsof
+      - gcc
+      - nmap
+      - iftop
+      - atop
+      - vim
+      - iotop
+      - glibc-langpack-ru
+      state: present
+     
+  - name: stop selinux
+    command: setenforce 0
+  
+  - name: disable selinux
+    selinux:
+      state: disabled

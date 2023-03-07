@@ -1,0 +1,63 @@
+---
+# tasks file for k8s-main
+
+- name: Add docker repository
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docer-ce.repo
+
+- name: install docker packages
+  dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+    update_cache: true
+
+- name: start and enable docker service
+  systemd:
+    name: docker.service
+    state: started
+    enabled: true
+
+- name: Remove swapfile from /etc/fstab
+  mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  with_items:
+    - swap
+    - none
+
+- name: Disable swap
+  command: swapoff -a
+  when: ansible_swaptotal_mb > 0
+
+- name: add kube repo
+  template:
+    src: k8s.repo
+    dest: /etc/yum.repos.d/k8s.repo
+
+- name: install kubernetes
+  dnf:
+    name:
+      - kubelet 
+      - kubeadm 
+      - kubectl
+    state: present
+    update_cache: true
+
+- name: Configure node ip
+  lineinfile:
+    path: /etc/default/kubelet
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ ansible_default_ipv4.address }}
+
+- name: service kubelet start
+  systemd:
+    name: kubelet.service
+    state: restarted
+    enabled: true
+
