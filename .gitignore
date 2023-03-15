@@ -1,1 +1,12 @@
-variables.tf
+.terraform
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+.idea
+/.terraform.tfstate.lock.info
+/*.swp
+/id_rsa
+/id_rsa.pub
+/ansible/hosts
+.DS_Store
+vars.tf
